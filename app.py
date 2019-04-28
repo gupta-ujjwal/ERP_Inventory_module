@@ -25,11 +25,14 @@ def addinventory(form) :
    master = 'insert into Master values('+rid+', "'+name+'", "'+desc+'");'
    transaction = 'insert into Transaction values('+rid+', "'+name+'", "'+cat+'", '+price+', "'+intime+'", "",'+qnt+');'
    print(master,transaction)
-   mycursor.execute(master)
-   print('First done')
-   mycursor.execute(transaction)
-   mydb.commit()
-   return 'Values Inserted'
+   try :
+      mycursor.execute(master)
+      print('First done')
+      mycursor.execute(transaction)
+      mydb.commit()
+      return 'Values Inserted'
+   except :
+      return 'Please Check your details.'
 
 def dborder(form) :
    mydb = mysql.connector.connect(
@@ -57,9 +60,9 @@ def dborder(form) :
       if val<qnt:
          return 'Insuffucient Quantity, Order sent to Accounts department to approve'
       else :
-         mycursor.execute('UPDATE Transaction SET Quantity='+str(200)+' WHERE Raw_ID='+str(rid)+';')
+         mycursor.execute('UPDATE Transaction SET Quantity='+str(val-qnt)+' WHERE Raw_ID='+str(rid)+';')
          mydb.commit()
-         print('Order placed. Please collect your order from Inventory department.')
+         return 'Order placed. Please collect your order from Inventory department.'
    else :
       return 'Entry Not Found'
 
@@ -67,18 +70,22 @@ def dborder(form) :
 @app.route('/order',methods = ['POST', 'GET'])
 def order():
    if request.method == 'POST':
+      error = None
       # return jsonify(request.form)
       print(request.form.to_dict(flat=False))
-      return dborder(request.form.to_dict(flat=False))
+      error = dborder(request.form.to_dict(flat=False))
+      return render_template('index.html',error=error)
    else:
       return render_template('index.html')
 
 @app.route('/inventory',methods = ['POST', 'GET'])
 def inventory():
    if request.method == 'POST':
+      error = None
       # return jsonify(request.form)
       print(request.form.to_dict(flat=False))
-      return addinventory(request.form.to_dict(flat=False))
+      error = addinventory(request.form.to_dict(flat=False))
+      return render_template('inventory.html',error=error)
    else:
       return render_template('inventory.html')
 

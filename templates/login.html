@@ -1,6 +1,6 @@
 <html>
     <head>
-        <title>Login Incentory</title>
+        <title>Login Inventory</title>
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <style>
             /*FONT*/
@@ -243,12 +243,20 @@
                         from { background-color: #fff; }
                         to   { background-color: #0c0a1e; }
                     }
+            .orderbutton {
+                background: #d80808;
+                padding: 10px 50px;
+                font-size: 24px !important;
+            }
         </style>
     </head>
     <body>
         <div class="bg"></div>
         <div class="container animated fadeIn">
             <center>
+                {% if error %}
+                    <p><strong>Error:</strong> {{ error }}
+                {% endif %}
                 <h2>
                 <a href="#homepage">Login</a>
                 </h2>
@@ -261,8 +269,11 @@
                         <input type="password" name="password" placeholder="Password">
                     </div>
                     <button type="submit" value="submit">Login</button>
+                    <h4>Or</h4>
+                    <a class="orderbutton"href="http://localhost:5656/order">Place an order</a> 
                 </center>
                 <br>
+                
             </form>
         </div>
         
