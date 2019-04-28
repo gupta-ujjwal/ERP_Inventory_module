@@ -3,6 +3,34 @@ import mysql.connector
 import os
 app = Flask(__name__)
 
+def addinventory(form) :
+   mydb = mysql.connector.connect(
+      host="localhost",
+      user="administrator",
+      passwd="Ujju@8860",
+      database="ERP"
+   )
+
+   mycursor = mydb.cursor()
+
+   rid = form['RawID'][0]
+   name = form["ProductName"][0]
+   cat = form['Category'][0]
+   desc = form['Desc'][0]
+   qnt = form['Quantity'][0]
+   price = form['Price'][0]
+   intime = form['InTime'][0]
+   print(rid,name,cat,price,qnt,intime)
+
+   master = 'insert into Master values('+rid+', "'+name+'", "'+desc+'");'
+   transaction = 'insert into Transaction values('+rid+', "'+name+'", "'+cat+'", '+price+', "'+intime+'", "",'+qnt+');'
+   print(master,transaction)
+   mycursor.execute(master)
+   print('First done')
+   mycursor.execute(transaction)
+   mydb.commit()
+   return 'Values Inserted'
+
 def dborder(form) :
    mydb = mysql.connector.connect(
       host="localhost",
@@ -50,11 +78,11 @@ def inventory():
    if request.method == 'POST':
       # return jsonify(request.form)
       print(request.form.to_dict(flat=False))
-      return jsonify(request.form)
+      return addinventory(request.form.to_dict(flat=False))
    else:
       return render_template('inventory.html')
 
-@app.route('/login',methods = ['POST', 'GET'])
+@app.route('/',methods = ['POST', 'GET'])
 def login():
    if request.method == 'POST':
       error = None
