@@ -1,5 +1,6 @@
-from flask import Flask, redirect, url_for, request, render_template,jsonify
+from flask import Flask, redirect, url_for, request, render_template,jsonify, flash
 import mysql.connector
+import os
 app = Flask(__name__)
 
 def dborder(form) :
@@ -36,7 +37,7 @@ def dborder(form) :
 
 
 @app.route('/order',methods = ['POST', 'GET'])
-def login():
+def order():
    if request.method == 'POST':
       # return jsonify(request.form)
       print(request.form.to_dict(flat=False))
@@ -44,7 +45,32 @@ def login():
    else:
       return render_template('index.html')
 
+@app.route('/inventory',methods = ['POST', 'GET'])
+def inventory():
+   if request.method == 'POST':
+      # return jsonify(request.form)
+      print(request.form.to_dict(flat=False))
+      return jsonify(request.form)
+   else:
+      return render_template('inventory.html')
+
+@app.route('/login',methods = ['POST', 'GET'])
+def login():
+   if request.method == 'POST':
+      error = None
+      # return jsonify(request.form)
+      res = request.form.to_dict(flat=False)
+      if res['username'][0] == 'InventoryModule' and res['password'][0] == 'password':
+         flash('You were succesfully logged in.')
+         return redirect('/inventory')
+      else:
+         error = 'Invalid username or password. Please try again!'
+      return render_template('login.html',error=error)
+   else:
+      return render_template('login.html')
+
 if __name__ == '__main__':
+   app.secret_key = os.urandom(24)
    app.run(debug = True, port=5656)
 
    
