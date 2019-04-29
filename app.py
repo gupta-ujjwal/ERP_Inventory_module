@@ -3,6 +3,27 @@ import mysql.connector
 import os
 app = Flask(__name__)
 
+def showTable(name):
+   mydb = mysql.connector.connect(
+      host="localhost",
+      user="administrator",
+      passwd="Ujju@8860",
+      database="ERP"
+   )
+
+   mycursor = mydb.cursor()
+
+   try:
+        query = "SELECT * from "+name+";"
+        mycursor.execute(query)
+
+        data = mycursor.fetchall()
+
+        return data
+
+   except Exception as e:
+        return (str(e))
+
 def addinventory(form) :
    mydb = mysql.connector.connect(
       host="localhost",
@@ -44,14 +65,15 @@ def dborder(form) :
 
    mycursor = mydb.cursor()
 
-   rid = form['RawID'][0]
-   name = form["ProducName"][0]
-   cat = form['Category'][0]
-   qnt = int(form['Quantity'][0])
-   print(rid,name,cat,qnt)
-
-   mycursor.execute("select Quantity from Transaction where Name='"+name+"' AND Raw_ID="+str(rid)+";")
-
+   try :
+      rid = form['RawID'][0]
+      name = form["ProducName"][0]
+      cat = form['Category'][0]
+      qnt = int(form['Quantity'][0])
+      print(rid,name,cat,qnt)
+      mycursor.execute("select Quantity from Transaction where Name='"+name+"' AND Raw_ID="+str(rid)+";")
+   except :
+      return 'Entry Not Found. Please Check Your Details'
    res = mycursor.fetchall()
    if len(res):
       for x in res:
@@ -64,7 +86,7 @@ def dborder(form) :
          mydb.commit()
          return 'Order placed. Please collect your order from Inventory department.'
    else :
-      return 'Entry Not Found'
+      return 'Entry Not Found. Please Check Your Details'
 
 
 @app.route('/order',methods = ['POST', 'GET'])
@@ -74,9 +96,11 @@ def order():
       # return jsonify(request.form)
       print(request.form.to_dict(flat=False))
       error = dborder(request.form.to_dict(flat=False))
-      return render_template('index.html',error=error)
+      data = showTable('Master')
+      return render_template('index.html',error=error, data=data)
    else:
-      return render_template('index.html')
+      data = showTable('Master')
+      return render_template('index.html',data=data)
 
 @app.route('/inventory',methods = ['POST', 'GET'])
 def inventory():
@@ -85,9 +109,11 @@ def inventory():
       # return jsonify(request.form)
       print(request.form.to_dict(flat=False))
       error = addinventory(request.form.to_dict(flat=False))
-      return render_template('inventory.html',error=error)
+      data = showTable('Transaction')
+      return render_template('inventory.html',error=error,data=data)
    else:
-      return render_template('inventory.html')
+      data = showTable('Transaction')
+      return render_template('inventory.html',data=data)
 
 @app.route('/',methods = ['POST', 'GET'])
 def login():
@@ -96,7 +122,6 @@ def login():
       # return jsonify(request.form)
       res = request.form.to_dict(flat=False)
       if res['username'][0] == 'InventoryModule' and res['password'][0] == 'password':
-         flash('You were succesfully logged in.')
          return redirect('/inventory')
       else:
          error = 'Invalid username or password. Please try again!'

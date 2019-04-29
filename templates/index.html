@@ -23,9 +23,9 @@
             <p class="lead"></p>
         </div>
         <div class="row">
-            <div class="offset-md-2 col-md-8">
+            <div class="col-md-8">
                 {% if error %}
-                    {% if error == 'Entry Not Found. Please check your Details'%}
+                    {% if error == 'Entry Not Found. Please Check Your Details'%}
                       <p style="background:Red; height:40px; padding: 10px;"><strong>Error:</strong>{{ error }}</p>
                     {% elif error == 'Insuffucient Quantity, Order sent to Accounts department to approve' %}
                       <p style="background: orange; height:40px; padding: 10px;">{{ error }}</p>
@@ -52,18 +52,29 @@
                         </div>
                     </div>
                     <div class="mb-3">
-                        <label for="email">Price<span class="text-muted">(Per Unit)</span></label>
-                        <input type="email" class="form-control" id="email" placeholder="" name="Price" id="Price">
-                    </div>
-                    <div class="mb-3">
                         <label for="address">Quantity</label>
                         <input type="text" class="form-control" id="address" required="" name="Quantity" placeholder="">
                     </div>
                     <hr class="mb-4">
                     <hr class="mb-4">
-                    <hr class="mb-4">
                     <button class="btn btn-primary btn-lg btn-block" type="submit">Place Order</button>
                 </form>
+            </div>
+            <div class="col-md-4">
+                <table border="1" cellpadding="5" cellspacing="5" style="margin:5% 50px">
+                  <tr>
+                    <th>Raw ID</th>
+                    <th>Name</th> 
+                    <th>Decription</th>
+                  </tr>
+                  {% for row in data %}
+                      <tr>
+                      {% for d in row %}
+                          <td>{{ d }}</td>
+                      {% endfor %}
+                      </tr>
+                  {% endfor %}
+                </table>
             </div>
         </div>
         <footer class="my-5 pt-5 text-muted text-center text-small">

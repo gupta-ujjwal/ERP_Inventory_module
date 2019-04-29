@@ -23,7 +23,7 @@
             
             <div class="row">
               
-              <div class="offset-md-2 col-md-8">
+              <div class="col-md-8">
                 {% if error %}
                   {% if error == 'Values Inserted'%}
                     <p style="background:green; height:40px; padding: 10px;"><strong>Value Succesfully Inserted</strong></p>
@@ -71,14 +71,34 @@
                     <input type="text" class="form-control" id="InTime" name="InTime" required="" placeholder="">
                     
                   </div>
-                  <button class="btn btn-primary btn-lg btn-block" type="submit">Place Order</button>
+                  <button class="btn btn-primary btn-lg btn-block" type="submit">Add Inventory</button>
                 </form>
+              </div>
+              <div class="col-md-4">
+                <table border="1" cellpadding="5" cellspacing="5" style="margin:50% 50px">
+                  <tr>
+                    <th>Raw Id</th>
+                    <th>Name</th> 
+                    <th>Category</th>
+                    <th>Price</th>
+                    <th>Intime</th>
+                    <th>Outtime</th>
+                    <th>Quantity</th>
+                  </tr>
+                  {% for row in data %}
+                      <tr>
+                      {% for d in row %}
+                          <td>{{ d }}</td>
+                      {% endfor %}
+                      </tr>
+                  {% endfor %}
+                </table>
               </div>
               <!-- <div class="col-md-4 mx-auto">
                 <img src="static/wrench.svg" class="mx-auto"  style="padding-top:20vh;padding-left:3vw;"/>
               </div> -->
             </div>
-          
+            
             <footer class="my-5 pt-5 text-muted text-center text-small">
               <p class="mb-1">© 2017-2019 Company Name</p>
               <ul class="list-inline">
@@ -88,6 +108,7 @@
               </ul>
             </footer>
           </div>
+
           <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
                 <script>window.jQuery || document.write('<script src="/docs/4.3/assets/js/vendor/jquery-slim.min.js"><\/script>')</script><script src="/docs/4.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-xrRywqdh3PHs8keKZN+8zzc5TX0GRTLCcmivcbNJWm2rs5C8PRhcEn3czEjhAO9o" crossorigin="anonymous"></script>
                   <script src="form-validation.js"></script>
